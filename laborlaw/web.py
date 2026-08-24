@@ -40,6 +40,10 @@ def create_app() -> FastAPI:
     app = FastAPI(title="노동법 글 작성")
     app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
+    @app.get("/health")
+    def health():
+        return {"ok": True}
+
     @app.get("/")
     def index():
         return FileResponse(STATIC / "index.html")
