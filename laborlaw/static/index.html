@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>노동법 글 작성</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="card">
+    <p class="eyebrow">법령 파일 근거 · 워드프레스 발행</p>
+    <h1>주제와 키워드를 넣으면 새 글을 작성합니다</h1>
+    <p class="lead">첨부된 노동법 파일과, 필요하면 원문 글 URL만 근거로 사용합니다. 자료에 없는 법률정보는 넣지 않습니다.</p>
+
+    <form id="form">
+      <label for="topic">주제</label>
+      <input id="topic" name="topic" type="text" required
+             placeholder="예: 연차유급휴가 발생 요건">
+
+      <label for="keyword">메인 키워드</label>
+      <input id="keyword" name="keyword" type="text" required
+             placeholder="예: 연차유급휴가">
+
+      <label for="url">원문 글 URL</label>
+      <input id="url" name="url" type="url" inputmode="url" autocomplete="off"
+             placeholder="https://example.com/labor-post">
+
+      <label for="extra">추가 요구사항 <span class="optional">(선택)</span></label>
+      <textarea id="extra" name="extra" rows="4"
+                placeholder="강조할 쟁점, 쓰지 말 것, 독자층 등"></textarea>
+
+      <p class="hint">첨부자료는 <code>laws/</code> 폴더의 법령 파일을 자동으로 사용합니다.</p>
+
+      <label class="check">
+        <input id="dry" type="checkbox">
+        워드프레스에 올리지 않고 초안만 만들기
+      </label>
+      <button id="submit" type="submit">글 작성 후 발행</button>
+    </form>
+
+    <section class="meta-box" aria-label="메타 설명">
+      <label for="meta-desc">메타 설명</label>
+      <textarea id="meta-desc" rows="3" readonly
+                placeholder="글을 작성하면 여기에 SEO 메타 설명이 표시됩니다. 공백 제외 100~110자."></textarea>
+      <p id="meta-count" class="hint">공백 제외 0자</p>
+    </section>
+
+    <p id="meta" class="meta"></p>
+    <div id="status" class="status hidden" role="status"></div>
+    <div id="result" class="result hidden"></div>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

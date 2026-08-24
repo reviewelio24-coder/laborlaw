@@ -1,0 +1,29 @@
+[project]
+name = "laborlaw-blog"
+version = "0.1.0"
+description = "블로그 URL을 바탕으로 노동법 근거 글을 작성하고 워드프레스에 올립니다."
+requires-python = ">=3.10"
+dependencies = [
+  "beautifulsoup4>=4.12",
+  "fastapi>=0.115",
+  "lxml>=5.0",
+  "openai>=1.40",
+  "pypdf>=5.0",
+  "python-dotenv>=1.0",
+  "requests>=2.32",
+  "trafilatura>=2.0",
+  "uvicorn>=0.32",
+]
+
+[project.scripts]
+laborlaw = "laborlaw.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["laborlaw*"]
+
+[tool.setuptools.package-data]
+laborlaw = ["static/*"]
