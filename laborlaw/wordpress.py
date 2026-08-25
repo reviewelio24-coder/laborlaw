@@ -16,6 +16,7 @@ def publish_post(
     excerpt: str,
     tag_names: list[str] | None = None,
     meta_description: str = "",
+    focus_keyword: str = "",
 ) -> dict[str, Any]:
     auth = (settings.wp_username, settings.wp_app_password)
     headers = {"Content-Type": "application/json"}
@@ -41,12 +42,11 @@ def publish_post(
     }
     if tag_ids:
         payload["tags"] = tag_ids
+    seo_meta = _seo_meta(meta_description, focus_keyword)
     if meta_description:
         payload["excerpt"] = meta_description
-        payload["meta"] = {
-            "_yoast_wpseo_metadesc": meta_description,
-            "rank_math_description": meta_description,
-        }
+    if seo_meta:
+        payload["meta"] = seo_meta
     response = requests.post(
         f"{settings.wp_url}/wp-json/wp/v2/posts",
         json=payload,
@@ -54,7 +54,7 @@ def publish_post(
         headers=headers,
         timeout=60,
     )
-    if response.status_code >= 400 and meta_description and "meta" in payload:
+    if response.status_code >= 400 and "meta" in payload:
         payload.pop("meta", None)
         response = requests.post(
             f"{settings.wp_url}/wp-json/wp/v2/posts",
@@ -68,6 +68,20 @@ def publish_post(
             f"워드프레스 업로드 실패 ({response.status_code}): {response.text[:800]}"
         )
     return response.json()
+
+
+def _seo_meta(meta_description: str, focus_keyword: str) -> dict[str, str]:
+    meta: dict[str, str] = {}
+    desc = meta_description.strip()
+    focus = focus_keyword.strip()
+    if desc:
+        meta["_yoast_wpseo_metadesc"] = desc
+        meta["rank_math_description"] = desc
+    if focus:
+        meta["_yoast_wpseo_focuskw"] = focus
+        meta["_yoast_wpseo_focuskw_text_input"] = focus
+        meta["rank_math_focus_keyword"] = focus
+    return meta
 
 
 def _ensure_term(settings: Settings, taxonomy: str, name: str) -> int:

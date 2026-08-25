@@ -49,6 +49,7 @@ def generate_article(
 이 글은 WordPress 카테고리 「노동법 쉽게 읽기」에 게시됩니다. 본문에 카테고리명을 쓰지 마세요.
 해시태그 10개는 hashtags 배열에만 넣고 본문 HTML에 #태그를 넣지 마세요. 프로그램이 WordPress 태그란에 넣습니다.
 메타 설명은 meta_description 필드에만 넣으세요. 공백 제외 100~110자, 메인 키워드 1회, 글의 핵심만 요약하세요.
+서론의 첫 단락(첫 <p>)에 메인 키워드를 반드시 포함하세요.
 """
     kwargs = {
         "model": settings.openai_model,

@@ -120,6 +120,7 @@ def run_pipeline(
         article.get("meta_description") or article["excerpt"],
         tag_names=article["hashtags"],
         meta_description=article.get("meta_description") or "",
+        focus_keyword=keyword,
     )
     link = posted.get("link") or posted.get("guid", {}).get("rendered")
     result["wp_id"] = posted.get("id")
