@@ -10,6 +10,13 @@ ROOT = Path(__file__).resolve().parents[1]
 LAWS_DIR = ROOT / "laws"
 
 
+def output_dir() -> Path:
+    """Local: repo/output. Vercel/Lambda: /tmp (the app bundle is read-only)."""
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        return Path(os.getenv("TMPDIR") or "/tmp") / "laborlaw-output"
+    return ROOT / "output"
+
+
 class ConfigError(RuntimeError):
     pass
 

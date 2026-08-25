@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from laborlaw.config import ROOT, load_settings
+from laborlaw.config import load_settings, output_dir
 from laborlaw.fetch_source import fetch_source
 from laborlaw.generate import ArticleJob, InsufficientSourceError, generate_article
 from laborlaw.laws import format_law_context, load_law_chunks, retrieve_relevant
@@ -80,10 +80,17 @@ def run_pipeline(
             "meta_description": "",
             "meta_char_count": 0,
         }
-    out_dir = ROOT / "output"
-    out_dir.mkdir(exist_ok=True)
-    dump = out_dir / "last_article.json"
-    dump.write_text(json.dumps(article, ensure_ascii=False, indent=2), encoding="utf-8")
+    saved_path = None
+    try:
+        dump_dir = output_dir()
+        dump_dir.mkdir(parents=True, exist_ok=True)
+        dump = dump_dir / "last_article.json"
+        dump.write_text(
+            json.dumps(article, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        saved_path = str(dump)
+    except OSError:
+        saved_path = None
     result = {
         "insufficient": False,
         "missing": "",
@@ -97,7 +104,7 @@ def run_pipeline(
         "wp_id": None,
         "wp_status": None,
         "wp_link": None,
-        "saved_path": str(dump),
+        "saved_path": saved_path,
         "core_keywords": article["core_keywords"],
         "related_keywords": article["related_keywords"],
         "hashtags": article["hashtags"],
