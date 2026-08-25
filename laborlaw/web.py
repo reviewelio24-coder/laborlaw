@@ -44,6 +44,10 @@ def create_app() -> FastAPI:
     def health():
         return {"ok": True}
 
+    @app.get("/favicon.ico")
+    def favicon():
+        return FileResponse(STATIC / "favicon.ico")
+
     @app.get("/")
     def index():
         return FileResponse(STATIC / "index.html")
