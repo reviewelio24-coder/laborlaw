@@ -3,11 +3,11 @@
   "framework": "fastapi",
   "functions": {
     "app.py": {
-      "maxDuration": 300,
+      "maxDuration": 800,
       "includeFiles": "laws/**"
     },
     "api/index.py": {
-      "maxDuration": 300,
+      "maxDuration": 800,
       "includeFiles": "laws/**"
     }
   }
