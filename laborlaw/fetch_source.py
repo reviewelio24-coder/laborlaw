@@ -21,12 +21,14 @@ class SourceArticle:
     excerpt: str
 
 
-def fetch_source(url: str, timeout: int = 30) -> SourceArticle:
+def fetch_source(url: str, timeout: int = 30, label: str = "페이지") -> SourceArticle:
     try:
         response = requests.get(url, headers=HEADERS, timeout=timeout)
         response.raise_for_status()
     except requests.RequestException as exc:
-        raise RuntimeError(f"원문 페이지를 가져오지 못했습니다. 주소를 확인하세요. ({exc})") from exc
+        raise RuntimeError(
+            f"{label} 내용을 가져오지 못했습니다. 주소를 확인하세요. ({exc})"
+        ) from exc
     html = response.text
     extracted = trafilatura.extract(
         html,

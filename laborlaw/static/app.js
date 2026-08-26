@@ -4,6 +4,8 @@ const keywordInput = document.getElementById("keyword");
 const urlInput = document.getElementById("url");
 const extraInput = document.getElementById("extra");
 const dryInput = document.getElementById("dry");
+const addRefBtn = document.getElementById("add-ref");
+const refUrlsEl = document.getElementById("ref-urls");
 const submit = document.getElementById("submit");
 const metaDesc = document.getElementById("meta-desc");
 const metaCount = document.getElementById("meta-count");
@@ -46,6 +48,30 @@ async function loadStatus() {
   }
 }
 
+function collectRefUrls() {
+  return [...refUrlsEl.querySelectorAll(".ref-url")]
+    .map((el) => el.value.trim())
+    .filter(Boolean);
+}
+
+function addRefInput() {
+  if (refUrlsEl.querySelectorAll(".ref-url").length >= 10) {
+    return;
+  }
+  const index = refUrlsEl.querySelectorAll(".ref-url").length;
+  const input = document.createElement("input");
+  input.className = "ref-url";
+  input.type = "url";
+  input.inputMode = "url";
+  input.autocomplete = "off";
+  input.placeholder = "https://example.com/reference";
+  input.id = `ref-url-${index}`;
+  refUrlsEl.appendChild(input);
+  input.focus();
+}
+
+addRefBtn.addEventListener("click", addRefInput);
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   resultEl.className = "result hidden";
@@ -64,6 +90,7 @@ form.addEventListener("submit", async (event) => {
         topic: topicInput.value.trim(),
         keyword: keywordInput.value.trim(),
         url: urlInput.value.trim(),
+        refs: collectRefUrls(),
         extra: extraInput.value.trim(),
         dry_run: dryInput.checked,
       }),

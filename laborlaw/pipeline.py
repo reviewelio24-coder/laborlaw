@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 
 from laborlaw.config import load_settings, output_dir
-from laborlaw.fetch_source import fetch_source
+from laborlaw.fetch_source import SourceArticle, fetch_source
 from laborlaw.generate import ArticleJob, InsufficientSourceError, generate_article
 from laborlaw.laws import format_law_context, load_law_chunks, retrieve_relevant
 from laborlaw.wordpress import publish_post
@@ -33,6 +33,7 @@ def run_pipeline(
     url: str = "",
     extra: str = "",
     dry_run: bool = False,
+    refs: list[str] | None = None,
 ) -> dict:
     topic = topic.strip()
     keyword = keyword.strip()
@@ -40,7 +41,13 @@ def run_pipeline(
         raise ValueError("주제와 메인 키워드를 입력하세요.")
     settings = load_settings()
     chunks = law_chunks_cached()
-    source = fetch_source(url) if url.strip() else None
+    source = fetch_source(url, label="원문 글") if url.strip() else None
+    references: list[SourceArticle] = []
+    for ref_url in refs or []:
+        cleaned = ref_url.strip()
+        if not cleaned or (source and cleaned == source.url):
+            continue
+        references.append(fetch_source(cleaned, label="참고 글"))
     query = "\n".join(
         x
         for x in (
@@ -48,6 +55,7 @@ def run_pipeline(
             keyword,
             extra,
             (source.title + "\n" + source.text) if source else "",
+            *[ref.title + "\n" + ref.text for ref in references],
         )
         if x
     )
@@ -56,7 +64,13 @@ def run_pipeline(
     try:
         article = generate_article(
             settings,
-            ArticleJob(topic=topic, keyword=keyword, extra=extra, source=source),
+            ArticleJob(
+                topic=topic,
+                keyword=keyword,
+                extra=extra,
+                source=source,
+                references=references,
+            ),
             law_context,
         )
     except InsufficientSourceError as exc:

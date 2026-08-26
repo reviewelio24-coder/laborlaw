@@ -13,7 +13,7 @@
   <main class="card">
     <p class="eyebrow">법령 파일 근거 · 워드프레스 발행</p>
     <h1>주제와 키워드를 넣으면 새 글을 작성합니다</h1>
-    <p class="lead">첨부된 노동법 파일과, 필요하면 원문 글 URL만 근거로 사용합니다. 자료에 없는 법률정보는 넣지 않습니다.</p>
+    <p class="lead">첨부된 노동법 파일과, 필요하면 원문 글·참고 URL만 근거로 사용합니다. 자료에 없는 법률정보는 넣지 않습니다.</p>
 
     <form id="form">
       <label for="topic">주제</label>
@@ -27,6 +27,15 @@
       <label for="url">원문 글 URL</label>
       <input id="url" name="url" type="url" inputmode="url" autocomplete="off"
              placeholder="https://example.com/labor-post">
+
+      <div class="field-head">
+        <label for="ref-url-0">참고 URL <span class="optional">(선택)</span></label>
+        <button type="button" class="add-btn" id="add-ref" aria-label="참고 URL 추가">+</button>
+      </div>
+      <div id="ref-urls">
+        <input id="ref-url-0" class="ref-url" type="url" inputmode="url" autocomplete="off"
+               placeholder="https://example.com/reference">
+      </div>
 
       <label for="extra">추가 요구사항 <span class="optional">(선택)</span></label>
       <textarea id="extra" name="extra" rows="4"

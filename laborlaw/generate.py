@@ -17,6 +17,7 @@ class ArticleJob:
     keyword: str
     extra: str = ""
     source: SourceArticle | None = None
+    references: list[SourceArticle] | None = None
 
 
 def generate_article(
@@ -32,19 +33,37 @@ def generate_article(
 
 [SOURCE B — 원문 글 본문]
 {job.source.text[:12000]}"""
+    refs = job.references or []
+    if refs:
+        ref_blocks = []
+        for i, ref in enumerate(refs, 1):
+            ref_blocks.append(
+                f"""참고 URL {i}: {ref.url}
+제목: {ref.title}
+
+[SOURCE C — 참고 글 {i} 본문]
+{ref.text[:8000]}"""
+            )
+        ref_block = "\n\n".join(ref_blocks)
+    else:
+        ref_block = "(참고 URL 없음. SOURCE C 없음.)"
     extra = job.extra.strip() or "(없음)"
     user = f"""주제: {job.topic}
 메인 키워드: {job.keyword}
 원문 글 URL: {job.source.url if job.source else "(없음)"}
+참고 URL: {", ".join(ref.url for ref in refs) or "(없음)"}
 추가 요구사항: {extra}
 
 [SOURCE B — 원문 글]
 {source_block}
 
+[SOURCE C — 참고 URL]
+{ref_block}
+
 [SOURCE A — 첨부 법조문]
 {law_context}
 
-법조문 직접 인용은 SOURCE A에서만 하세요. SOURCE B의 조문이 SOURCE A에서 확인되지 않으면 직접 인용하지 마세요.
+법조문 직접 인용은 SOURCE A에서만 하세요. SOURCE B·C의 조문이 SOURCE A에서 확인되지 않으면 직접 인용하지 마세요.
 
 이 글은 WordPress 카테고리 「노동법 쉽게 읽기」에 게시됩니다. 본문에 카테고리명을 쓰지 마세요.
 해시태그 10개는 hashtags 배열에만 넣고 본문 HTML에 #태그를 넣지 마세요. 프로그램이 WordPress 태그란에 넣습니다.

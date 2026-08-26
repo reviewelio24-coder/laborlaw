@@ -107,7 +107,7 @@ textarea:focus {
   margin-bottom: 18px;
 }
 
-button {
+#submit {
   width: 100%;
   border: 0;
   border-radius: 10px;
@@ -119,8 +119,39 @@ button {
   cursor: pointer;
 }
 
-button:hover { background: var(--accent-2); }
-button:disabled { opacity: 0.55; cursor: wait; }
+#submit:hover { background: var(--accent-2); }
+#submit:disabled { opacity: 0.55; cursor: wait; }
+
+.field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.field-head label { margin-bottom: 0; }
+
+.add-btn {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #eef6f1;
+  border-color: var(--accent);
+}
+
+.ref-url { margin-bottom: 10px; }
 
 .meta-box {
   margin-top: 22px;

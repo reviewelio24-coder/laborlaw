@@ -20,6 +20,7 @@ class RunRequest(BaseModel):
     topic: str = Field(min_length=1)
     keyword: str = Field(min_length=1)
     url: str = ""
+    refs: list[str] = Field(default_factory=list)
     extra: str = ""
     dry_run: bool = False
 
@@ -67,6 +68,16 @@ def create_app() -> FastAPI:
     @app.post("/api/run")
     def run(body: RunRequest):
         url = _normalize_url(body.url)
+        refs: list[str] = []
+        seen = {url} if url else set()
+        for raw in body.refs:
+            ref = _normalize_url(raw)
+            if not ref or ref in seen:
+                continue
+            seen.add(ref)
+            refs.append(ref)
+        if len(refs) > 10:
+            raise HTTPException(status_code=400, detail="참고 URL은 최대 10개까지 넣을 수 있습니다.")
         if not _run_lock.acquire(blocking=False):
             raise HTTPException(
                 status_code=409, detail="이미 글을 작성 중입니다. 끝날 때까지 기다려 주세요."
@@ -76,6 +87,7 @@ def create_app() -> FastAPI:
                 topic=body.topic,
                 keyword=body.keyword,
                 url=url,
+                refs=refs,
                 extra=body.extra,
                 dry_run=body.dry_run,
             )

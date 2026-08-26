@@ -7,7 +7,14 @@ from laborlaw.pipeline import run_pipeline
 from laborlaw.laws import load_law_chunks
 
 
-def cmd_run(topic: str, keyword: str, url: str, extra: str, dry_run: bool) -> None:
+def cmd_run(
+    topic: str,
+    keyword: str,
+    url: str,
+    extra: str,
+    dry_run: bool,
+    refs: list[str] | None = None,
+) -> None:
     try:
         result = run_pipeline(
             topic=topic,
@@ -15,6 +22,7 @@ def cmd_run(topic: str, keyword: str, url: str, extra: str, dry_run: bool) -> No
             url=url,
             extra=extra,
             dry_run=dry_run,
+            refs=refs or [],
         )
     except ConfigError as exc:
         raise SystemExit(str(exc)) from exc
@@ -63,6 +71,7 @@ def main() -> None:
     run.add_argument("--topic", required=True, help="작성할 노동법 주제")
     run.add_argument("--keyword", required=True, help="SEO 메인 키워드")
     run.add_argument("--url", default="", help="원문 글 URL (선택)")
+    run.add_argument("--ref", action="append", default=[], help="참고 URL (여러 번 지정 가능)")
     run.add_argument("--extra", default="", help="추가 요구사항 (선택)")
     run.add_argument(
         "--dry-run",
@@ -75,7 +84,7 @@ def main() -> None:
     serve.add_argument("--port", type=int, default=8890)
     args = parser.parse_args()
     if args.cmd == "run":
-        cmd_run(args.topic, args.keyword, args.url, args.extra, args.dry_run)
+        cmd_run(args.topic, args.keyword, args.url, args.extra, args.dry_run, args.ref)
     elif args.cmd == "laws":
         cmd_list_laws()
     elif args.cmd == "serve":
