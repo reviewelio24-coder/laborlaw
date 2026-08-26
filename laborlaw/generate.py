@@ -69,6 +69,7 @@ def generate_article(
 해시태그 10개는 hashtags 배열에만 넣고 본문 HTML에 #태그를 넣지 마세요. 프로그램이 WordPress 태그란에 넣습니다.
 메타 설명은 meta_description 필드에만 넣으세요. 공백 제외 100~110자, 메인 키워드 1회, 글의 핵심만 요약하세요.
 서론의 첫 단락(첫 <p>)에 메인 키워드를 반드시 포함하세요.
+자료가 충돌하거나 부족하면 사용자 안내에 SOURCE A/B/C나 '자료 A', '자료 B'를 쓰지 마세요. 원문 글 제목과 URL, 참고 글 제목과 URL, 첨부 법령 파일명처럼 화면에서 바로 알 수 있는 이름으로 적으세요.
 """
     kwargs = {
         "model": settings.openai_model,

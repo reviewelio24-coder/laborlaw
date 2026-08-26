@@ -194,6 +194,7 @@ textarea:focus {
 
 .result.ok { background: #eef6f1; }
 .result.err { background: #f8eee8; color: var(--warn); }
+.result.err p { white-space: pre-wrap; }
 
 .result a { color: var(--accent); font-weight: 700; }
 .hidden { display: none; }
