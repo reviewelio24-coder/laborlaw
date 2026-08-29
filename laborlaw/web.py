@@ -4,11 +4,19 @@ from pathlib import Path
 from threading import Lock
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from starlette.middleware.sessions import SessionMiddleware
 
+from laborlaw.auth import (
+    AuthGateMiddleware,
+    SESSION_COOKIE,
+    credentials_match,
+    https_only,
+    load_auth,
+)
 from laborlaw.config import ConfigError, load_settings
 from laborlaw.pipeline import run_pipeline
 
@@ -23,6 +31,11 @@ class RunRequest(BaseModel):
     refs: list[str] = Field(default_factory=list)
     extra: str = ""
     dry_run: bool = False
+
+
+class LoginRequest(BaseModel):
+    username: str = Field(min_length=1)
+    password: str = Field(min_length=1)
 
 
 def _normalize_url(raw: str) -> str:
@@ -48,6 +61,31 @@ def create_app() -> FastAPI:
     @app.get("/favicon.ico")
     def favicon():
         return FileResponse(STATIC / "favicon.ico")
+
+    @app.get("/login")
+    def login_page():
+        return FileResponse(STATIC / "login.html")
+
+    @app.post("/api/login")
+    def login(body: LoginRequest, request: Request):
+        cfg = load_auth()
+        if cfg is None:
+            raise HTTPException(
+                status_code=503,
+                detail="AUTH_USERNAME, AUTH_PASSWORD 환경변수를 설정하세요.",
+            )
+        if not credentials_match(body.username.strip(), body.password, cfg):
+            raise HTTPException(
+                status_code=401, detail="아이디 또는 비밀번호가 올바르지 않습니다."
+            )
+        request.session.clear()
+        request.session["user"] = cfg.username
+        return {"ok": True}
+
+    @app.post("/api/logout")
+    def logout(request: Request):
+        request.session.clear()
+        return {"ok": True}
 
     @app.get("/")
     def index():
@@ -100,6 +138,16 @@ def create_app() -> FastAPI:
         finally:
             _run_lock.release()
 
+    auth = load_auth()
+    app.add_middleware(AuthGateMiddleware)
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=(auth.secret if auth else "laborlaw-unconfigured"),
+        session_cookie=SESSION_COOKIE,
+        same_site="lax",
+        https_only=https_only(),
+        max_age=60 * 60 * 24 * 30,
+    )
     return app
 
 

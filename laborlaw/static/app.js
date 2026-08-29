@@ -1,3 +1,4 @@
+const logoutBtn = document.getElementById("logout");
 const form = document.getElementById("form");
 const topicInput = document.getElementById("topic");
 const keywordInput = document.getElementById("keyword");
@@ -37,9 +38,17 @@ function escapeHtml(text) {
     .replaceAll(">", "&gt;");
 }
 
+function redirectIfUnauthorized(res) {
+  if (res.status === 401) {
+    window.location.href = "/login";
+    throw new Error("로그인이 필요합니다.");
+  }
+}
+
 async function loadStatus() {
   try {
-    const res = await fetch("/api/status");
+    const res = await fetch("/api/status", { credentials: "same-origin" });
+    redirectIfUnauthorized(res);
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || "설정을 읽지 못했습니다.");
     metaEl.textContent = `발행 대상 ${data.wp_url} · 상태 ${data.wp_status} · 모델 ${data.model}`;
@@ -85,6 +94,7 @@ form.addEventListener("submit", async (event) => {
   try {
     const res = await fetch("/api/run", {
       method: "POST",
+      credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         topic: topicInput.value.trim(),
@@ -95,6 +105,7 @@ form.addEventListener("submit", async (event) => {
         dry_run: dryInput.checked,
       }),
     });
+    redirectIfUnauthorized(res);
     const data = await res.json();
     if (!res.ok) {
       const detail = Array.isArray(data.detail)
@@ -134,6 +145,11 @@ form.addEventListener("submit", async (event) => {
   } finally {
     submit.disabled = false;
   }
+});
+
+logoutBtn.addEventListener("click", async () => {
+  await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
+  window.location.href = "/login";
 });
 
 loadStatus();

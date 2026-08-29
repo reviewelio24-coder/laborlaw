@@ -14,7 +14,7 @@ pip install -e .
 cp .env.example .env
 ```
 
-3. `.env`에 OpenAI 키, 워드프레스 주소·사용자명·애플리케이션 비밀번호를 넣습니다.
+3. `.env`에 웹 로그인 아이디·비밀번호, OpenAI 키, 워드프레스 주소·사용자명·애플리케이션 비밀번호를 넣습니다.
 4. 법령 파일을 `laws/`에 넣습니다. (`.txt` `.md` `.pdf`)
 
 ## 실행
@@ -46,6 +46,9 @@ laborlaw run --topic "연차유급휴가" --keyword "연차유급휴가" --url "
 
 Vercel에 연결한 뒤 환경 변수를 넣습니다.
 
+- `AUTH_USERNAME`
+- `AUTH_PASSWORD`
+- `AUTH_SECRET` (선택)
 - `OPENAI_API_KEY`
 - `OPENAI_MODEL` (`gpt-5.6`)
 - `WP_URL`
