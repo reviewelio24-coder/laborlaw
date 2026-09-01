@@ -1,7 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Labor law">
-  <rect width="32" height="32" rx="8" fill="#10192A"/>
-  <path fill="#F2F5FA" d="M6.2 10.4c3.4-1.5 6.6.1 9.8 1.7 3.2-1.6 6.4-3.2 9.8-1.7v12.4c-3.4-1.5-6.6.1-9.8 1.7-3.2-1.6-6.4-3.2-9.8-1.7V10.4Z"/>
-  <path fill="#8B9BB3" d="M16 12.1c3.2-1.6 6.4-3.2 9.8-1.7v12.4c-3.4-1.5-6.6.1-9.8 1.7V12.1Z"/>
-  <path fill="#10192A" d="M15.35 11.2h1.3v14.1h-1.3z"/>
-  <path fill="#5B9CFF" d="M22.4 9.6h1.7v8.2c0 .7-.8 1.1-1.35.65L22.4 17.8V9.6Z"/>
+  <defs>
+    <linearGradient id="bg" x1="16" y1="0" x2="16" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#243658"/>
+      <stop offset="0.45" stop-color="#15233c"/>
+      <stop offset="1" stop-color="#0c1422"/>
+    </linearGradient>
+    <linearGradient id="pageL" x1="6" y1="10" x2="16" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7f9fd"/>
+      <stop offset="1" stop-color="#d7e3f5"/>
+    </linearGradient>
+    <linearGradient id="pageR" x1="16" y1="10" x2="26" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c5d3ea"/>
+      <stop offset="1" stop-color="#9aafcc"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="22" y1="9" x2="24" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8fb8ff"/>
+      <stop offset="1" stop-color="#3d7ee6"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#bg)"/>
+  <rect x="0.75" y="0.75" width="30.5" height="30.5" rx="7.25" fill="none" stroke="#d2e2ff" stroke-opacity="0.32" stroke-width="1.1"/>
+  <path fill="url(#pageL)" d="M6.2 10.4c3.4-1.5 6.6.1 9.8 1.7 3.2-1.6 6.4-3.2 9.8-1.7v12.4c-3.4-1.5-6.6.1-9.8 1.7-3.2-1.6-6.4-3.2-9.8-1.7V10.4Z"/>
+  <path fill="url(#pageR)" d="M16 12.1c3.2-1.6 6.4-3.2 9.8-1.7v12.4c-3.4-1.5-6.6.1-9.8 1.7V12.1Z"/>
+  <path fill="#0c1422" d="M15.35 11.2h1.3v14.1h-1.3z"/>
+  <path fill="url(#mark)" d="M22.4 9.6h1.7v8.2c0 .7-.8 1.1-1.35.65L22.4 17.8V9.6Z"/>
 </svg>
